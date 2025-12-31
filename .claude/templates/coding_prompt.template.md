@@ -81,6 +81,19 @@ For example, if this were a chat app, you should perform a test that logs into t
 
 ### STEP 4: CHOOSE ONE FEATURE TO IMPLEMENT
 
+#### TEST-DRIVEN DEVELOPMENT MINDSET (CRITICAL)
+
+Features are **test cases** that drive development. This is test-driven development:
+
+- **If you can't test a feature because functionality doesn't exist → BUILD IT**
+- You are responsible for implementing ALL required functionality
+- Never assume another process will build it later
+- "Missing functionality" is NOT a blocker - it's your job to create it
+
+**Example:** Feature says "User can filter flashcards by difficulty level"
+- WRONG: "Flashcard page doesn't exist yet" → skip feature
+- RIGHT: "Flashcard page doesn't exist yet" → build flashcard page → implement filter → test feature
+
 Get the next feature to implement:
 
 ```
@@ -98,24 +111,34 @@ Use the feature_mark_in_progress tool with feature_id=42
 Focus on completing one feature perfectly and completing its testing steps in this session before moving on to other features.
 It's ok if you only complete one feature in this session, as there will be more sessions later that continue to make progress.
 
-#### If You Cannot Implement the Feature
+#### When to Skip a Feature (EXTREMELY RARE)
 
-Sometimes a feature cannot be implemented yet. Valid reasons to skip:
+**Skipping should almost NEVER happen.** Only skip for truly external blockers you cannot control:
 
-- **Dependency**: The feature requires another feature to be implemented first
-- **Missing prerequisite**: Core infrastructure (auth, database schema) isn't ready
-- **Unclear requirements**: The feature description is ambiguous and needs clarification
+- **External API not configured**: Third-party service credentials missing (e.g., Stripe keys, OAuth secrets)
+- **External service unavailable**: Dependency on service that's down or inaccessible
+- **Environment limitation**: Hardware or system requirement you cannot fulfill
 
-If you encounter a blocker, **skip the feature** to move it to the end of the queue:
+**NEVER skip because:**
+
+| Situation | Wrong Action | Correct Action |
+|-----------|--------------|----------------|
+| "Page doesn't exist" | Skip | Create the page |
+| "API endpoint missing" | Skip | Implement the endpoint |
+| "Database table not ready" | Skip | Create the migration |
+| "Component not built" | Skip | Build the component |
+| "No data to test with" | Skip | Create test data or build data entry flow |
+| "Feature X needs to be done first" | Skip | Build feature X as part of this feature |
+
+If a feature requires building other functionality first, **build that functionality**. You are the coding agent - your job is to make the feature work, not to defer it.
+
+If you must skip (truly external blocker only):
 
 ```
-# Skip feature #42 - moves it to end of priority queue
-Use the feature_skip tool with feature_id=42
+Use the feature_skip tool with feature_id={id}
 ```
 
-After skipping, use the feature_get_next tool again to get the next feature to work on.
-
-**Do NOT skip features just because they seem difficult.** Only skip when there is a genuine dependency or blocker. Document why you skipped in `claude-progress.txt`.
+Document the SPECIFIC external blocker in `claude-progress.txt`. "Functionality not built" is NEVER a valid reason.
 
 ### STEP 5: IMPLEMENT THE FEATURE
 
